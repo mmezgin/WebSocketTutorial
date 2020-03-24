@@ -9,20 +9,25 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script>
         $(() => {
-            const socket = io.connect('http://localhost:3241/first');
+            const socket = io.connect('http://localhost:3241/');
+            socket.on('say hi', (data) => {
+                $('#hi').html('hi ' + data.country); //.html yerine .append yaparsan ekler 
+            });
 
             $('button').on('click', () => {
-                socket.emit('press1');
-            });
-            socket.on('sendToAll', (data) => {
-                $('body').append(`${data.name} <br>`);
+                socket.emit('sendHello', {
+                    city: 'istanbul',
+                    name: 'mert'
+                });
             });
         });
     </script>
 </head>
 
 <body>
-    <button>Click Me !</button>
+    <h3 style="color:red">Hello User This Page Is Temporary !</h3>
+    <button>HI !</button>
+    <div id='hi'></div>
 </body>
 
 </html>

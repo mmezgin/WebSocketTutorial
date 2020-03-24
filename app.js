@@ -1,23 +1,19 @@
 const http = require('http');
 const socketio = require('socket.io');
 const server = http.createServer((req, res) => {
-    res.end('selam ');
+    res.end('Success');
 });
 
 server.listen(3241);
+
 const io = socketio.listen(server);
+const nsp = io.of('/first');
 
-io.sockets.on('connection', (socket) => {
-    console.log('User Connected !');
+nsp.on('connection', (socket) => {
+    console.log('user connected');
 
-    socket.on('sendHello', (data) => {
-        console.log(data.city + " " + data.name);
+    socket.on('press1', () => {
+        nsp.emit('sendToAll', { name: 'mert' }); //socket.emit denseydi sadece yazana giderdi. ama nsp.emit dersen aynı namespacedeki her user a gider
     });
 
-    socket.on('disconnect', () => {
-        console.log('User disconnected !');
-    });
-    setTimeout(() => {
-        socket.emit('say hi', { country: 'Turkey' });
-    }, 2000);
 });
