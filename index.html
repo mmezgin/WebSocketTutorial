@@ -9,20 +9,29 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script>
         $(() => {
-            const socket = io.connect('http://localhost:3241/first');
+            const socket = io.connect('http://localhost:3241/');
+            $('#joinRoom').on('click', () => {
+                socket.emit('joinRoom', {
+                    name: $('#roomName').val()
+                });
+                socket.on('new join', (data) => {
+                    $('#userCount').html(`This room has <b> ${data.count} </b> users !`);
+                });
+                socket.on('log', (data) => {
+                    $('.logs').append(data.message);
+                });
+            });
 
-            $('button').on('click', () => {
-                socket.emit('press1');
-            });
-            socket.on('sendToAll', (data) => {
-                $('body').append(`${data.name} <br>`);
-            });
         });
     </script>
 </head>
 
 <body>
-    <button>Click Me !</button>
+    <input id="roomName" />
+    <button id="joinRoom">Join</button>
+    <div class="logs"></div>
+    <br></br>
+    <div id="userCount"></div>
 </body>
 
 </html>
