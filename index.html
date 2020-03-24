@@ -5,6 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WebSocket</title>
+    <style>
+        #leaveRoom {
+            display: none;
+        }
+    </style>
     <script src="http://localhost:3241/socket.io/socket.io.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script>
@@ -14,11 +19,30 @@
                 socket.emit('joinRoom', {
                     name: $('#roomName').val()
                 });
+                $('#leaveRoom').on('click', () => {
+                    socket.emit('leaveRoom', {
+                        name: $('#roomName').val()
+                    });
+                });
+
+                socket.on('leavedRoom', (data) => {
+                    $('#userCount').html(`This room has <b> ${data.count} </b> users !`);
+                });
+
                 socket.on('new join', (data) => {
                     $('#userCount').html(`This room has <b> ${data.count} </b> users !`);
                 });
                 socket.on('log', (data) => {
                     $('.logs').append(data.message);
+                    $('#roomName,#joinRoom').attr('disabled', 'disabled');
+                    $('#leaveRoom').show();
+                });
+
+                socket.on('socket.leaved', (data) => {
+                    $('.logs').append('</br>' + data.message + '</br>');
+                    $('#roomName,#joinRoom').removeAttr('disabled');
+                    $('#leaveRoom').hide();
+                    $('#userCount').empty();
                 });
             });
 
@@ -29,6 +53,7 @@
 <body>
     <input id="roomName" />
     <button id="joinRoom">Join</button>
+    <button id="leaveRoom">Leave</button>
     <div class="logs"></div>
     <br></br>
     <div id="userCount"></div>
