@@ -6,13 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WebSocket</title>
     <script src="http://localhost:3241/socket.io/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script>
-        const socket = io.connect('http://localhost:3241/');
+        $(() => {
+            const socket = io.connect('http://localhost:3241/');
+            socket.on('say hi', () => {
+                $('#hi').html('hi sis');
+            });
+
+            $('button').on('click', () => {
+                socket.emit('sendHello');
+            });
+        });
     </script>
 </head>
 
 <body>
     <h3 style="color:red">Hello User This Page Is Temporary !</h3>
+    <button>HI !</button>
+    <div id='hi'></div>
 </body>
 
 </html>
