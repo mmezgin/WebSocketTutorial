@@ -10,12 +10,15 @@
     <script>
         $(() => {
             const socket = io.connect('http://localhost:3241/');
-            socket.on('say hi', () => {
-                $('#hi').html('hi sis');
+            socket.on('say hi', (data) => {
+                $('#hi').html('hi ' + data.country); //.html yerine .append yaparsan ekler 
             });
 
             $('button').on('click', () => {
-                socket.emit('sendHello');
+                socket.emit('sendHello', {
+                    city: 'istanbul',
+                    name: 'mert'
+                });
             });
         });
     </script>
